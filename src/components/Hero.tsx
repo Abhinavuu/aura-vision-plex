@@ -1,11 +1,36 @@
 import { Button } from "@/components/ui/button";
+import { FileDown } from "lucide-react";
 import heroImage from "@/assets/hero-vision-ai.jpg";
+import { exportDocumentationToPDF } from "@/lib/exportPDF";
+import { useToast } from "@/hooks/use-toast";
 
 interface HeroProps {
   onGetStarted: () => void;
 }
 
 export const Hero = ({ onGetStarted }: HeroProps) => {
+  const { toast } = useToast();
+
+  const handleExportPDF = async () => {
+    try {
+      toast({
+        title: "Generating PDF...",
+        description: "Please wait while we create your documentation.",
+      });
+      await exportDocumentationToPDF();
+      toast({
+        title: "Success!",
+        description: "Documentation exported to PDF successfully.",
+      });
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: "Failed to export documentation. Please try again.",
+        variant: "destructive",
+      });
+    }
+  };
+
   return (
     <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
       {/* Background gradient */}
@@ -55,6 +80,15 @@ export const Hero = ({ onGetStarted }: HeroProps) => {
                 className="border-2 border-primary/30 hover:bg-primary/10 px-8 py-6 text-lg rounded-xl backdrop-blur-sm"
               >
                 Learn More
+              </Button>
+              <Button 
+                size="lg" 
+                variant="outline"
+                onClick={handleExportPDF}
+                className="border-2 border-secondary/30 hover:bg-secondary/10 px-8 py-6 text-lg rounded-xl backdrop-blur-sm group"
+              >
+                <FileDown className="mr-2 h-5 w-5 group-hover:animate-bounce" />
+                Export Docs
               </Button>
             </div>
 
